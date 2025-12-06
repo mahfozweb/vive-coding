@@ -41,6 +41,16 @@ export default function Skills() {
             name: "UI/UX Design",
             icon: "https://lh3.googleusercontent.com/aida-public/AB6AXuD_NHHenH7vo1zhD-AtHkBmQLxF1GTAUDQ0SpYibcHeyJi28Lipx22XSmuyiq_tpKvINiX6KlsWt_wfLEgUz-KRIrYBLkQ5z9bu3E4O_TtKd3uDUwEcvwoutm6YGTl5CjhMD6N8-wzDkN5prYOTSBpnjXXXiAXg0Kxm0SOWJmA3jPmdkzmyXMbT0wl35zC9d-hx54K7AXJyvrC-ym6_LEHJIMLKWOIk2l6rrjaXW__d5dxNlyr3usw1Sqjwv9Bo2qjb2M9_JDhEsRah",
             percentage: "70%"
+        },
+        {
+            name: "Node.js",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg",
+            percentage: "75%"
+        },
+        {
+            name: "MongoDB",
+            icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
+            percentage: "70%"
         }
     ];
 
