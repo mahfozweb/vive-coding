@@ -9,42 +9,6 @@ export default function Hero() {
     const buttonRef2 = useRef(null);
 
     useEffect(() => {
-        // Text Animation using GSAP
-        const textElement = textRef.current;
-        if (textElement) {
-            const words = textElement.innerText.split(' ');
-            textElement.innerHTML = '';
-            words.forEach((word, wordIndex) => {
-                const wordSpan = document.createElement('span');
-                wordSpan.style.display = 'inline-block';
-                wordSpan.style.marginRight = '0.3em'; // Space between words
-
-                const chars = word.split('');
-                chars.forEach(char => {
-                    const span = document.createElement('span');
-                    span.innerText = char;
-                    span.style.display = 'inline-block';
-                    span.style.opacity = '0'; // Initial state
-                    wordSpan.appendChild(span);
-                });
-                textElement.appendChild(wordSpan);
-            });
-
-            // Select all char spans
-            const charSpans = textElement.querySelectorAll('span span');
-
-            const tl = gsap.timeline();
-            tl.to(charSpans, {
-                opacity: 1,
-                y: 0,
-                rotateX: 0,
-                stagger: 0.02,
-                duration: 1,
-                ease: "power4.out",
-                startAt: { y: 100, rotateX: -90 }
-            });
-        }
-
         // Magnetic Button Effect
         const buttons = [buttonRef1.current, buttonRef2.current];
 
@@ -73,7 +37,6 @@ export default function Hero() {
                 });
             });
         });
-
     }, []);
 
     const containerVariants = {
@@ -93,7 +56,7 @@ export default function Hero() {
     };
 
     return (
-        <section ref={heroRef} className="font-display bg-background-dark text-slate-300 antialiased overflow-hidden relative">
+        <section id="home" ref={heroRef} className="font-display bg-background-dark text-slate-300 antialiased overflow-hidden relative">
             <div className="absolute inset-0 z-0">
                 <motion.div
                     animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3], x: [0, 50, 0], y: [0, -30, 0] }}
@@ -129,10 +92,29 @@ export default function Hero() {
                                 </span>
                             </motion.div>
 
-                            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight min-h-[1.2em]">
+                            <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight min-h-[1.2em] flex flex-wrap justify-center lg:justify-start gap-x-4">
                                 <div className="sr-only">Junior Frontend Developer</div>
-                                <div ref={textRef} aria-hidden="true">
-                                    Junior Frontend Developer
+                                <div aria-hidden="true" className="flex flex-wrap justify-center lg:justify-start gap-x-[0.3em]">
+                                    {"Junior Frontend Developer".split(" ").map((word, wordIndex) => (
+                                        <span key={wordIndex} className="inline-block whitespace-nowrap">
+                                            {word.split("").map((char, charIndex) => (
+                                                <motion.span
+                                                    key={charIndex}
+                                                    initial={{ y: -50, opacity: 0 }}
+                                                    animate={{ y: 0, opacity: 1 }}
+                                                    transition={{
+                                                        type: "spring",
+                                                        damping: 10,
+                                                        stiffness: 100,
+                                                        delay: (wordIndex * 5 + charIndex) * 0.05 + 0.5 // Stagger effect
+                                                    }}
+                                                    className="inline-block"
+                                                >
+                                                    {char}
+                                                </motion.span>
+                                            ))}
+                                        </span>
+                                    ))}
                                 </div>
                             </h1>
 
@@ -164,14 +146,17 @@ export default function Hero() {
                                     View My Work
                                     <span className="material-symbols-outlined !text-xl group-hover:translate-x-1 transition-transform">arrow_forward</span>
                                 </button>
-                                <button
+                                <a
                                     ref={buttonRef2}
-                                    className="bg-transparent border border-slate-700 text-slate-300 font-bold py-4 px-8 rounded-xl hover:bg-slate-800/50 hover:text-white hover:border-slate-600 transition-all"
+                                    href="https://drive.google.com/file/d/13suQtN8Aqm12DeKG6D46rcNYRRvTd4ev/view?usp=drive_link"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-transparent border border-slate-700 text-slate-300 font-bold py-4 px-8 rounded-xl hover:bg-slate-800/50 hover:text-white hover:border-slate-600 transition-all inline-block text-center"
                                 >
                                     Download Resume
-                                </button>
+                                </a>
                             </motion.div>
-                        </motion.div>
+                        </motion.div >
 
                         <motion.div
                             className="relative flex justify-center lg:justify-end"
@@ -179,7 +164,11 @@ export default function Hero() {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
                         >
-                            <div className="relative w-80 h-80 sm:w-[28rem] sm:h-[28rem]">
+                            <motion.div
+                                animate={{ y: [0, -20, 0] }}
+                                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                                className="relative w-80 h-80 sm:w-[28rem] sm:h-[28rem]"
+                            >
                                 <div className="absolute inset-0 bg-gradient-to-tr from-primary to-blue-500 rounded-full blur-[80px] opacity-20 animate-pulse"></div>
                                 <img
                                     alt="Developer Portrait"
@@ -190,8 +179,12 @@ export default function Hero() {
                                 {/* Floating Badges */}
                                 <motion.div
                                     initial={{ scale: 0, rotate: -20 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ delay: 1, type: "spring", stiffness: 200 }}
+                                    animate={{ scale: 1, rotate: 0, y: [0, -10, 0] }}
+                                    transition={{
+                                        scale: { delay: 1, type: "spring", stiffness: 200 },
+                                        rotate: { delay: 1, type: "spring", stiffness: 200 },
+                                        y: { delay: 1, duration: 4, repeat: Infinity, ease: "easeInOut" }
+                                    }}
                                     className="absolute top-4 -left-4 sm:top-8 sm:-left-8 z-20"
                                 >
                                     <div className="bg-slate-900/80 backdrop-blur-md text-white text-sm font-semibold px-4 py-2 rounded-2xl flex items-center gap-3 shadow-xl border border-slate-700/50">
@@ -204,8 +197,12 @@ export default function Hero() {
 
                                 <motion.div
                                     initial={{ scale: 0, rotate: 10 }}
-                                    animate={{ scale: 1, rotate: 0 }}
-                                    transition={{ delay: 1.2, type: "spring", stiffness: 200 }}
+                                    animate={{ scale: 1, rotate: 0, y: [0, 10, 0] }}
+                                    transition={{
+                                        scale: { delay: 1.2, type: "spring", stiffness: 200 },
+                                        rotate: { delay: 1.2, type: "spring", stiffness: 200 },
+                                        y: { delay: 1.2, duration: 5, repeat: Infinity, ease: "easeInOut" }
+                                    }}
                                     className="absolute bottom-1/2 -right-8 transform translate-y-1/2 z-20"
                                 >
                                     <div className="bg-slate-900/80 backdrop-blur-md text-white text-sm font-semibold px-4 py-2 rounded-2xl flex items-center gap-3 shadow-xl border border-slate-700/50">
@@ -218,20 +215,23 @@ export default function Hero() {
 
                                 <motion.div
                                     initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ delay: 1.4, type: "spring", stiffness: 200 }}
+                                    animate={{ scale: 1, y: [0, -8, 0] }}
+                                    transition={{
+                                        scale: { delay: 1.4, type: "spring", stiffness: 200 },
+                                        y: { delay: 1.4, duration: 3, repeat: Infinity, ease: "easeInOut" }
+                                    }}
                                     className="absolute bottom-4 left-0 z-20"
                                 >
                                     <div className="bg-slate-900/80 backdrop-blur-md text-white text-xs font-semibold px-3 py-1.5 rounded-full flex items-center gap-2 shadow-xl border border-slate-700/50">
-                                        <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                                         <span>Online</span>
                                     </div>
                                 </motion.div>
-                            </div>
+                            </motion.div>
                         </motion.div>
-                    </div>
-                </div>
-            </main>
-        </section>
+                    </div >
+                </div >
+            </main >
+        </section >
     );
 }

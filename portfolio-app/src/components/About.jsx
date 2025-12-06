@@ -1,7 +1,8 @@
 import { useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import BackgroundElements from './BackgroundElements';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,7 +32,6 @@ export default function About() {
                 scrollTrigger: {
                     trigger: title,
                     start: "top 80%",
-                    toggleActions: "play none none reverse"
                 },
                 opacity: 1,
                 y: 0,
@@ -65,24 +65,12 @@ export default function About() {
     };
 
     return (
-        <section ref={sectionRef} className="bg-background-light dark:bg-background-dark font-display relative overflow-hidden">
-            {/* Background elements */}
-            <motion.div
-                className="absolute top-20 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"
-                animate={{
-                    y: [0, -30, 0],
-                    scale: [1, 1.1, 1]
-                }}
-                transition={{
-                    duration: 8,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-            />
+        <section id="about" ref={sectionRef} className="bg-background-dark font-display relative overflow-hidden py-16">
+            <BackgroundElements />
 
-            <div className="flex items-center justify-center min-h-[60vh] relative z-10">
+            <div className="flex items-center justify-center min-h-[60vh] relative z-10 px-4">
                 <motion.section
-                    className="w-full max-w-5xl p-8 md:p-12 glass-card rounded-3xl"
+                    className="w-full max-w-5xl p-8 md:p-12 bg-slate-900/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl"
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-100px" }}
@@ -90,7 +78,7 @@ export default function About() {
                 >
                     <div className="grid md:grid-cols-2 gap-12 items-center">
                         <div className="space-y-6">
-                            <h2 ref={titleRef} className="text-5xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400 pb-2">
+                            <h2 ref={titleRef} className="text-5xl md:text-7xl font-bold text-white mb-6">
                                 About Me
                             </h2>
                             <motion.div variants={itemVariants} className="space-y-4">
@@ -103,7 +91,7 @@ export default function About() {
                             </motion.div>
                             <motion.div variants={itemVariants} className="pt-6">
                                 <div className="flex flex-wrap gap-3">
-                                    {['HTML5', 'CSS3', 'JavaScript', 'React', 'TailwindCSS', 'GSAP', 'Framer Motion'].map((skill, index) => (
+                                    {['HTML5', 'CSS3', 'Node.js', 'JavaScript', 'React', 'TailwindCSS', 'GSAP', 'Framer Motion'].map((skill, index) => (
                                         <motion.span
                                             key={index}
                                             whileHover={{
@@ -112,7 +100,7 @@ export default function About() {
                                                 backgroundColor: "rgba(147, 51, 234, 0.1)",
                                                 borderColor: "#9333ea"
                                             }}
-                                            className="px-4 py-2 text-sm font-medium border border-gray-200 dark:border-gray-700 rounded-xl text-gray-800 dark:text-gray-200 cursor-default transition-colors bg-white/50 dark:bg-black/50 backdrop-blur-sm"
+                                            className="px-4 py-2 text-sm font-medium border border-slate-700 rounded-xl text-slate-200 cursor-default transition-colors bg-slate-800/50 backdrop-blur-sm"
                                         >
                                             {skill}
                                         </motion.span>
@@ -143,21 +131,21 @@ export default function About() {
 
                             {/* Floating elements */}
                             <motion.div
-                                className="absolute -top-6 -right-6 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 max-w-[150px]"
+                                className="absolute -top-6 -right-6 p-5 bg-slate-800/80 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/50 min-w-[160px]"
                                 animate={{ y: [0, -10, 0] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: 1 }}
                             >
-                                <div className="text-xs font-bold text-gray-500 uppercase mb-1">Experience</div>
-                                <div className="text-2xl font-bold text-primary">2+ Years</div>
+                                <div className="text-xs font-bold text-slate-400 tracking-wider uppercase mb-2">Experience</div>
+                                <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400">1 Years</h3>
                             </motion.div>
 
                             <motion.div
-                                className="absolute -bottom-6 -left-6 p-4 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 max-w-[150px]"
+                                className="absolute -bottom-6 -left-6 p-5 bg-slate-800/80 backdrop-blur-md rounded-2xl shadow-2xl border border-slate-700/50 min-w-[160px]"
                                 animate={{ y: [0, 10, 0] }}
                                 transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                             >
-                                <div className="text-xs font-bold text-gray-500 uppercase mb-1">Projects</div>
-                                <div className="text-2xl font-bold text-green-500">20+ Done</div>
+                                <div className="text-xs font-bold text-slate-400 tracking-wider uppercase mb-2">Projects</div>
+                                <h3 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">10+ Done</h3>
                             </motion.div>
                         </motion.div>
                     </div>

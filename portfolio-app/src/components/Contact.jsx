@@ -1,6 +1,48 @@
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import BackgroundElements from './BackgroundElements';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Contact() {
+    const titleRef = useRef(null);
+    const formRef = useRef(null);
+
+    useEffect(() => {
+        const title = titleRef.current;
+        const chars = title.innerText.split('');
+        title.innerHTML = '';
+
+        chars.forEach((char) => {
+            const span = document.createElement('span');
+            span.innerText = char;
+            span.style.display = 'inline-block';
+            title.appendChild(span);
+        });
+
+        gsap.fromTo(title.children,
+            {
+                opacity: 0,
+                y: 50,
+                rotateX: -90
+            },
+            {
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 80%",
+                },
+                opacity: 1,
+                y: 0,
+                rotateX: 0,
+                stagger: 0.05,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            }
+        );
+    }, []);
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
@@ -13,22 +55,30 @@ export default function Contact() {
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 30 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+        hidden: { opacity: 0, y: 30, filter: "blur(5px)" },
+        visible: {
+            opacity: 1,
+            y: 0,
+            filter: "blur(0px)",
+            transition: { duration: 0.6, ease: "circOut" }
+        }
     };
 
     return (
-        <section className="bg-background-light dark:bg-background-dark font-display flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-5xl mx-auto">
-                <motion.h1
-                    initial={{ opacity: 0, y: -20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6 }}
-                    className="text-5xl md:text-6xl font-bold text-primary mb-12"
-                >
-                    Contact Me
-                </motion.h1>
+        <section id="contact" className="bg-background-dark font-display flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8 relative overflow-hidden">
+            <BackgroundElements />
+
+            <div className="w-full max-w-5xl mx-auto relative z-10">
+                <div className="mb-12">
+                    <h1
+                        ref={titleRef}
+                        className="text-5xl md:text-6xl font-bold text-white mb-2"
+                    >
+                        Contact Me
+                    </h1>
+                    <p className="text-slate-400 text-lg">Let's build something amazing together.</p>
+                </div>
+
                 <motion.div
                     className="grid grid-cols-1 lg:grid-cols-2 gap-12"
                     variants={containerVariants}
@@ -37,43 +87,36 @@ export default function Contact() {
                     viewport={{ once: true, margin: "-50px" }}
                 >
                     <motion.div className="space-y-6" variants={itemVariants}>
-                        <div className="flex items-center p-6 bg-white/50 dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                            <div className="bg-primary/20 p-3 rounded-lg mr-6">
-                                <span className="material-symbols-outlined text-primary">email</span>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Email</h2>
-                                <p className="text-gray-600 dark:text-gray-400">aharmanhd16@gmail.com</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center p-6 bg-white/50 dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                            <div className="bg-primary/20 p-3 rounded-lg mr-6">
-                                <span className="material-symbols-outlined text-primary">phone</span>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Phone</h2>
-                                <p className="text-gray-600 dark:text-gray-400">+880 1315 315 449</p>
-                            </div>
-                        </div>
-                        <div className="flex items-center p-6 bg-white/50 dark:bg-gray-800 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                            <div className="bg-primary/20 p-3 rounded-lg mr-6">
-                                <span className="material-symbols-outlined text-primary">location_on</span>
-                            </div>
-                            <div>
-                                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Location</h2>
-                                <p className="text-gray-600 dark:text-gray-400">Chittagong, Bangladesh</p>
-                            </div>
-                        </div>
+                        {[
+                            { icon: "email", title: "Email", value: "mahfoz81000@gmail.com" },
+                            { icon: "phone", title: "Phone", value: "+880 1783-523107" },
+                            { icon: "location_on", title: "Location", value: "Cattogram, Bangladesh" }
+                        ].map((item, index) => (
+                            <motion.div
+                                key={index}
+                                whileHover={{ x: 10, backgroundColor: "rgba(30, 41, 59, 0.8)" }}
+                                className="flex items-center p-6 bg-slate-900/50 backdrop-blur-md rounded-xl border border-slate-700/50 shadow-sm transition-all duration-300"
+                            >
+                                <div className="bg-primary/20 p-3 rounded-lg mr-6">
+                                    <span className="material-symbols-outlined text-primary">{item.icon}</span>
+                                </div>
+                                <div>
+                                    <h2 className="text-lg font-semibold text-slate-200">{item.title}</h2>
+                                    <p className="text-slate-400">{item.value}</p>
+                                </div>
+                            </motion.div>
+                        ))}
                     </motion.div>
+
                     <motion.div
-                        className="bg-white/50 dark:bg-gray-800 p-8 rounded-lg shadow-sm"
+                        className="bg-slate-900/50 backdrop-blur-md p-8 rounded-xl shadow-xl border border-slate-700/50"
                         variants={itemVariants}
                     >
-                        <form action="#" className="space-y-6" method="POST">
+                        <form ref={formRef} action="#" className="space-y-6" method="POST">
                             <div>
                                 <label className="sr-only" htmlFor="name">Your Name</label>
                                 <input
-                                    className="w-full bg-gray-200 dark:bg-gray-900 border-2 border-transparent focus:border-primary focus:ring-0 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg py-3 px-4 transition-colors"
+                                    className="w-full bg-slate-800 border border-slate-700 focus:border-primary focus:ring-1 focus:ring-primary text-slate-200 placeholder-slate-500 rounded-lg py-3 px-4 transition-colors outline-none"
                                     id="name"
                                     name="name"
                                     placeholder="Your Name"
@@ -83,7 +126,7 @@ export default function Contact() {
                             <div>
                                 <label className="sr-only" htmlFor="email">Your Email</label>
                                 <input
-                                    className="w-full bg-gray-200 dark:bg-gray-900 border-2 border-transparent focus:border-primary focus:ring-0 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg py-3 px-4 transition-colors"
+                                    className="w-full bg-slate-800 border border-slate-700 focus:border-primary focus:ring-1 focus:ring-primary text-slate-200 placeholder-slate-500 rounded-lg py-3 px-4 transition-colors outline-none"
                                     id="email"
                                     name="email"
                                     placeholder="Your Email"
@@ -93,7 +136,7 @@ export default function Contact() {
                             <div>
                                 <label className="sr-only" htmlFor="message">Your Message</label>
                                 <textarea
-                                    className="w-full bg-gray-200 dark:bg-gray-900 border-2 border-transparent focus:border-primary focus:ring-0 text-gray-800 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 rounded-lg py-3 px-4 transition-colors"
+                                    className="w-full bg-slate-800 border border-slate-700 focus:border-primary focus:ring-1 focus:ring-primary text-slate-200 placeholder-slate-500 rounded-lg py-3 px-4 transition-colors outline-none"
                                     id="message"
                                     name="message"
                                     placeholder="Your Message"
@@ -104,7 +147,7 @@ export default function Contact() {
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="w-full bg-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-background-light dark:focus:ring-offset-background-dark transition-all duration-300 ease-in-out"
+                                    className="w-full bg-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600 shadow-[0_0_20px_rgba(147,51,234,0.3)] hover:shadow-[0_0_30px_rgba(147,51,234,0.5)] transition-all duration-300 ease-in-out"
                                     type="submit"
                                 >
                                     Send Message

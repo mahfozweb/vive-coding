@@ -1,6 +1,16 @@
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import BackgroundElements from './BackgroundElements';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Skills() {
+    const sectionRef = useRef(null);
+    const titleRef = useRef(null);
+    const skillsRef = useRef(null);
+
     const skills = [
         {
             name: "HTML5",
@@ -34,69 +44,122 @@ export default function Skills() {
         }
     ];
 
+    useEffect(() => {
+        const title = titleRef.current;
+        const chars = title.innerText.split('');
+        title.innerHTML = '';
+
+        chars.forEach((char) => {
+            const span = document.createElement('span');
+            span.innerText = char;
+            span.style.display = 'inline-block';
+            title.appendChild(span);
+        });
+
+        gsap.fromTo(title.children,
+            {
+                opacity: 0,
+                y: 50,
+                rotateX: -90
+            },
+            {
+                scrollTrigger: {
+                    trigger: title,
+                    start: "top 80%",
+                },
+                opacity: 1,
+                y: 0,
+                rotateX: 0,
+                stagger: 0.05,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            }
+        );
+    }, []);
+
     const containerVariants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
             transition: {
-                staggerChildren: 0.1
+                staggerChildren: 0.1,
+                delayChildren: 0.2
             }
         }
     };
 
     const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+        hidden: { opacity: 0, y: 20, scale: 0.9, filter: "blur(5px)" },
+        visible: {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            transition: { duration: 0.5 }
+        }
     };
 
     return (
-        <section className="bg-background-light dark:bg-background-dark font-display">
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+        <section id="skills" ref={sectionRef} className="bg-background-dark font-display relative overflow-hidden py-16">
+            <BackgroundElements />
+
+            <div className="relative z-10 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-6xl mx-auto">
-                    <motion.h2
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.5 }}
-                        className="text-4xl sm:text-5xl font-bold text-primary mb-12 text-left"
+                    <h2
+                        ref={titleRef}
+                        className="text-4xl sm:text-5xl font-bold text-white mb-12 text-left"
                     >
                         My Skills
-                    </motion.h2>
+                    </h2>
+
                     <motion.div
                         className="grid grid-cols-1 md:grid-cols-2 gap-8"
                         variants={containerVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true, margin: "-100px" }}
+                        ref={skillsRef}
                     >
-                        {skills.map((skill) => (
+                        {skills.map((skill, index) => (
                             <motion.div
                                 key={skill.name}
                                 variants={itemVariants}
-                                whileHover={{ y: -5, boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)" }}
-                                className="bg-white/50 dark:bg-glass border border-gray-200/50 dark:border-slate-700/50 rounded-lg p-6 flex flex-col gap-4 transition-all duration-300"
+                                whileHover={{
+                                    y: -5,
+                                    boxShadow: "0 10px 30px -10px rgba(147, 51, 234, 0.3)",
+                                    borderColor: "rgba(147, 51, 234, 0.3)"
+                                }}
+                                className="bg-slate-900/50 backdrop-blur-md border border-slate-700/50 rounded-xl p-6 flex flex-col gap-4 transition-all duration-300 group"
                             >
                                 <div className="flex justify-between items-center mb-1">
                                     <div className="flex items-center gap-3">
-                                        <img alt={`${skill.name} logo`} className="w-7 h-7" src={skill.icon} />
-                                        <span className="text-lg font-medium text-slate-800 dark:text-slate-200">{skill.name}</span>
+                                        <div className="p-2 bg-slate-800 rounded-lg group-hover:bg-slate-800/80 transition-colors">
+                                            <img alt={`${skill.name} logo`} className="w-8 h-8 object-contain" src={skill.icon} />
+                                        </div>
+                                        <span className="text-lg font-bold text-slate-200">{skill.name}</span>
                                     </div>
-                                    <span className="text-md text-slate-600 dark:text-slate-400">{skill.percentage}</span>
+                                    <span className="text-md font-mono text-primary font-bold">{skill.percentage}</span>
                                 </div>
-                                <div className="w-full bg-slate-300 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                                <div className="w-full bg-slate-800 rounded-full h-2.5 overflow-hidden border border-slate-700">
                                     <motion.div
                                         initial={{ width: 0 }}
                                         whileInView={{ width: skill.percentage }}
                                         viewport={{ once: true }}
-                                        transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-                                        className="bg-gradient-to-r from-purple-500 to-purple-400 h-2.5 rounded-full"
-                                    ></motion.div>
+                                        transition={{ duration: 1.5, ease: "circOut", delay: 0.2 + (index * 0.1) }}
+                                        className="bg-gradient-to-r from-primary to-blue-500 h-full rounded-full relative overflow-hidden"
+                                    >
+                                        <motion.div
+                                            className="absolute top-0 bottom-0 left-0 w-full bg-white/20"
+                                            animate={{ x: ['-100%', '100%'] }}
+                                            transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 1 }}
+                                        />
+                                    </motion.div>
                                 </div>
                             </motion.div>
                         ))}
                     </motion.div>
                 </div>
-            </section>
+            </div>
         </section>
     );
 }
